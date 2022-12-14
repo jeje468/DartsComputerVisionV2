@@ -1,3 +1,3 @@
 import streamlit as st
 
-st.write('Szevasz Zelmo :sunglasses:')
+st.title("Computer vision darts game")
