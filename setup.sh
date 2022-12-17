@@ -6,4 +6,4 @@ enableCORS=false\n
 enableXsrfProtection=false\n
 port = $PORT\n
 \n
-" > ~/.streamlit.config.toml
+" > ~/.streamlit/config.toml
