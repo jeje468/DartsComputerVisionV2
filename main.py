@@ -1,37 +1,22 @@
-import numpy as np
-import cv2 as cv
+import cv2
 
-cap1 = cv.VideoCapture(0)
-cap2 = cv.VideoCapture(1)
+frame0 = cv2.VideoCapture(0)
+frame1 = cv2.VideoCapture(1)
+while 1:
 
-if not cap1.isOpened():
-    print("Cannot open camera 1")
-    exit()
+   ret0, img0 = frame0.read()
+   ret1, img00 = frame1.read()
+   img1 = cv2.resize(img0,(360,240))
+   img2 = cv2.resize(img00,(360,240))
+   if (frame0):
+       cv2.imshow('img1',img1)
+   if (frame1):
+       cv2.imshow('img2',img2)
 
-if not cap2.isOpened():
-    print("Cannot open camera 2")
-    exit()
+   k = cv2.waitKey(30) & 0xff
+   if k == 27:
+      break
 
-while True:
-
-    ret1, frame1 = cap1.read()
-    ret2, frame2 = cap2.read()
-
-    if not ret1:
-        print("Can't receive frame from camera 1.")
-        break
-
-    if not ret2:
-        print("Can't receive frame from camera 2.")
-        break
-
-    cv.imshow('Camera 1', frame1)
-    cv.imshow('Camera 2', frame2)
-
-    if cv.waitKey(1) == ord('q'):
-        break
-
-cap1.release()
-cap2.release()
-
-cv.destroyAllWindows()
+frame0.release()
+frame1.release()
+cv2.destroyAllWindows()
