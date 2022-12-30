@@ -1,60 +1,50 @@
+from tkinter import *
 from vidgear.gears import VideoGear
 import cv2 as cv
-import os
 from difference import *
 
-stream1 = VideoGear(source=0, logging=True).start() 
-stream2 = VideoGear(source=1, logging=True).start() 
+stream0 = VideoGear(source=0, logging=True).start() 
+stream1 = VideoGear(source=1, logging=True).start() 
+idx = 0
 
-hitCount = 0
-frameCount = 0
-
-if os.path.isfile('Images/previousA.jpg'):
-    os.remove('Images/previousA.jpg')
-
-if os.path.isfile('Images/previousB.jpg'):
-    os.remove('Images/previousB.jpg')
-
-while True:
+def takePhoto():
+    global idx
+    if idx < 3:
+        calibrationImage = stream0.read()
+    else:
+        calibrationImage = stream1.read()
     
-    frameA = stream1.read()
-    frameB = stream2.read()
+    cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
+    idx += 1
 
-    if frameA is None or frameB is None:
-        break
+def calibrate():
 
-    if not os.path.isfile('Images/previousA.jpg'):
-        cv.imwrite('Images/previousA.jpg', frameA)
-        cv.imwrite('Images/previousB.jpg', frameB)
-    
-    cv.imshow("Output Frame1", frameA)
-    cv.imshow("Output Frame2", frameB)
+    cameraAEmpty = cv.imread('Images/Calibration/calibration_0.jpg')
+    cameraALeft = cv.imread('Images/Calibration/calibration_1.jpg')
+    cameraARight = cv.imread('Images/Calibration/calibration_2.jpg')
 
-    cv.imwrite('Images/currentA.jpg', frameA)
-    cv.imwrite('Images/currentB.jpg', frameB)
+    cameraBEmpty = cv.imread('Images/Calibration/calibration_3.jpg')
+    cameraBTop = cv.imread('Images/Calibration/calibration_4.jpg')
+    cameraBBottom = cv.imread('Images/Calibration/calibration_5.jpg')
 
-    previousA = cv.imread('Images/previousA.jpg')
-    previousB = cv.imread('Images/previousB.jpg')
+    cntsALeft, boardContoursALeft, contourFoundALeft = retrieveDartContour(cameraAEmpty, cameraALeft, 10, "A")
+    cntsARight, boardContoursARight, contourFoundARight = retrieveDartContour(cameraAEmpty, cameraARight, 10, "A")
 
-    cntsA, boardContoursA, contourFoundA = findContour(previousA, frameA, 200, "A")
-    cntsB, boardContoursB, contourFoundB = findContour(previousB, frameB, 200, "B")
+    cntsBTop, boardContoursBTop, contourFoundBTop = retrieveDartContour(cameraBEmpty, cameraBTop, 20, "B")
+    cntsBBottom, boardContoursBBottom, contourFoundBBottom = retrieveDartContour(cameraBEmpty, cameraBBottom, 20, "B")
 
-    if contourFoundA or contourFoundB:
-        frameCount += 1
+    cv.imshow('A left', boardContoursALeft)
+    cv.imshow('A right', boardContoursARight)
+    cv.imshow('B top', boardContoursBTop)
+    cv.imshow('B bottom', boardContoursBBottom)
 
-        if frameCount == 3:
-            cntsA, boardContoursA = retrieveDartContour(previousA, frameA, 10, "A")
-            cntsB, boardContoursB = retrieveDartContour(previousB, frameB, 30, "B")
-            hitCount += 1
-    
-    # cv.imwrite('Images/previousA.jpg', frameA)
-    # cv.imwrite('Images/previousB.jpg', frameB)
+    cv.waitKey(0)
 
-    key = cv.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
 
-cv.destroyAllWindows()
+master = Tk()
 
-stream1.stop()
-stream2.stop()
+Button(master, text='Take calibration photo', command=takePhoto).pack()
+Button(master, text='Finish calibration', command=calibrate).pack()
+
+
+master.mainloop()

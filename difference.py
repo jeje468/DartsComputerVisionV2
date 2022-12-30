@@ -56,9 +56,9 @@ def retrieveDartContour(board, dart, area, camera):
     cv.imwrite('Images/' + camera + '/nyil_maszk.jpg', canvas)
 
     canvas = canvas.astype(np.uint8)
-    board_contours, contourFound = cvz.findContours(dart, canvas, 0)
+    boardContours, contourFound = cvz.findContours(dart, canvas, 0)
 
-    return cnts, board_contours
+    return cnts, boardContours, contourFound
 
 def findContour(board, dart, area, camera):
 
