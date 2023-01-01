@@ -2,3 +2,4 @@
     -Fenti kameránál kellett zaj szűrés
     -Oldalsó kameránál kellett kontraszt növelés
 2. Két lámpa nem segített
+3. Kalibrációhoz bevezettem egy vonalat a kép közepére, hogy a kamerákat megfelően lehessen pozícionálni.

@@ -2,6 +2,8 @@ from tkinter import *
 from vidgear.gears import VideoGear
 import cv2 as cv
 from difference import *
+from tip import *
+from gameplay import *
 
 stream0 = VideoGear(source=0, logging=True).start() 
 stream1 = VideoGear(source=1, logging=True).start() 
@@ -23,6 +25,7 @@ def calibrate():
     cameraALeft = cv.imread('Images/Calibration/calibration_1.jpg')
     cameraARight = cv.imread('Images/Calibration/calibration_2.jpg')
 
+
     cameraBEmpty = cv.imread('Images/Calibration/calibration_3.jpg')
     cameraBTop = cv.imread('Images/Calibration/calibration_4.jpg')
     cameraBBottom = cv.imread('Images/Calibration/calibration_5.jpg')
@@ -33,12 +36,15 @@ def calibrate():
     cntsBTop, boardContoursBTop, contourFoundBTop = retrieveDartContour(cameraBEmpty, cameraBTop, 20, "B")
     cntsBBottom, boardContoursBBottom, contourFoundBBottom = retrieveDartContour(cameraBEmpty, cameraBBottom, 20, "B")
 
-    cv.imshow('A left', boardContoursALeft)
-    cv.imshow('A right', boardContoursARight)
-    cv.imshow('B top', boardContoursBTop)
-    cv.imshow('B bottom', boardContoursBBottom)
+    leftPoint = findTip(boardContoursALeft, contourFoundALeft, "A")
+    rightPoint = findTip(boardContoursARight, contourFoundARight, "A")
+    topPoint = findTip(boardContoursBTop, contourFoundBTop, "B")
+    bottomPoint = findTip(boardContoursBBottom, contourFoundBBottom, "B")
 
-    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+    startGame([leftPoint, rightPoint, topPoint, bottomPoint])
+
 
 
 master = Tk()
@@ -46,5 +52,30 @@ master = Tk()
 Button(master, text='Take calibration photo', command=takePhoto).pack()
 Button(master, text='Finish calibration', command=calibrate).pack()
 
+# stream1 = VideoGear(source=0, logging=True).start() 
+# stream2 = VideoGear(source=1, logging=True).start() 
+
+# while True:
+    
+#     frameA = stream1.read()
+#     frameB = stream2.read()
+
+#     if frameA is None or frameB is None:
+#         break
+    
+#     cv.line(frameA, (int(frameA.shape[1] / 2), 0), (int(frameA.shape[1] / 2), int(frameA.shape[0])), [0, 255, 0], 3)
+#     cv.line(frameB, (int(frameB.shape[1] / 2), 0), (int(frameB.shape[1] / 2), int(frameB.shape[0])), [0, 255, 0], 3)
+    
+#     cv.imshow("Output Frame1", frameA)
+#     cv.imshow("Output Frame2", frameB)
+
+#     key = cv.waitKey(1) & 0xFF
+#     if key == ord("q"):
+#         break
+
+# cv.destroyAllWindows()
+
+# stream1.stop()
+# stream2.stop()
 
 master.mainloop()

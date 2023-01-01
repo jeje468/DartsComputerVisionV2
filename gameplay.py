@@ -2,59 +2,78 @@ from vidgear.gears import VideoGear
 import cv2 as cv
 import os
 from difference import *
+from tip import *
 
-stream1 = VideoGear(source=0, logging=True).start() 
-stream2 = VideoGear(source=1, logging=True).start() 
+def startGame(boardPoints):
 
-hitCount = 0
-frameCount = 0
+    centerOfBoard = [(boardPoints[0][0] + boardPoints[1][0]) // 2, (boardPoints[2][0] + boardPoints[3][0]) // 2]
+    stream1 = VideoGear(source=0, logging=True).start() 
+    stream2 = VideoGear(source=1, logging=True).start() 
 
-if os.path.isfile('Images/previousA.jpg'):
-    os.remove('Images/previousA.jpg')
+    hitCount = 0
+    frameCount = 0
+    points = []
 
-if os.path.isfile('Images/previousB.jpg'):
-    os.remove('Images/previousB.jpg')
+    if os.path.isfile('Images/previousA.jpg'):
+        os.remove('Images/previousA.jpg')
 
-while True:
-    
-    frameA = stream1.read()
-    frameB = stream2.read()
+    if os.path.isfile('Images/previousB.jpg'):
+        os.remove('Images/previousB.jpg')
 
-    if frameA is None or frameB is None:
-        break
+    while True:
+        
+        frameA = stream1.read()
+        frameB = stream2.read()
 
-    if not os.path.isfile('Images/previousA.jpg'):
-        cv.imwrite('Images/previousA.jpg', frameA)
-        cv.imwrite('Images/previousB.jpg', frameB)
-    
-    cv.imshow("Output Frame1", frameA)
-    cv.imshow("Output Frame2", frameB)
+        if frameA is None or frameB is None:
+            break
 
-    cv.imwrite('Images/currentA.jpg', frameA)
-    cv.imwrite('Images/currentB.jpg', frameB)
+        if not os.path.isfile('Images/previousA.jpg'):
+            cv.imwrite('Images/previousA.jpg', frameA)
+            cv.imwrite('Images/previousB.jpg', frameB)
+        
+        cv.imshow("Output Frame1", frameA)
+        cv.imshow("Output Frame2", frameB)
 
-    previousA = cv.imread('Images/previousA.jpg')
-    previousB = cv.imread('Images/previousB.jpg')
+        cv.imwrite('Images/currentA.jpg', frameA)
+        cv.imwrite('Images/currentB.jpg', frameB)
 
-    cntsA, boardContoursA, contourFoundA = findContour(previousA, frameA, 200, "A")
-    cntsB, boardContoursB, contourFoundB = findContour(previousB, frameB, 200, "B")
+        previousA = cv.imread('Images/previousA.jpg')
+        previousB = cv.imread('Images/previousB.jpg')
 
-    if contourFoundA or contourFoundB:
-        frameCount += 1
+        cntsA, boardContoursA, contourFoundA = findContour(previousA, frameA, 200, "A")
+        cntsB, boardContoursB, contourFoundB = findContour(previousB, frameB, 200, "B")
 
-        if frameCount == 3:
-            cntsA, boardContoursA = retrieveDartContour(previousA, frameA, 10, "A")
-            cntsB, boardContoursB = retrieveDartContour(previousB, frameB, 30, "B")
-            hitCount += 1
-    
-    # cv.imwrite('Images/previousA.jpg', frameA)
-    # cv.imwrite('Images/previousB.jpg', frameB)
+        if contourFoundA or contourFoundB:
+            frameCount += 1
 
-    key = cv.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+            if frameCount == 3:
+                cntsA, boardContoursA, contourFoundA = retrieveDartContour(previousA, frameA, 10, "A")
+                cntsB, boardContoursB, contourFoundB = retrieveDartContour(previousB, frameB, 30, "B")
 
-cv.destroyAllWindows()
+                tipA = findTip(boardContoursA, contourFoundA, "A")
+                tipB = findTip(boardContoursB, contourFoundB, "B")
 
-stream1.stop()
-stream2.stop()
+                diffA = centerOfBoard[0] - tipA[0]
+                diffB = centerOfBoard[1] - tipB[0]
+
+                ratio = 34 / (boardPoints[3][0] - boardPoints[2][0]) 
+                point = calculatePoint(diffA, diffB, ratio) 
+
+                points.append(point)
+
+                hitCount += 1
+                frameCount = 0
+
+                cv.imwrite('Images/previousA.jpg', frameA)
+                cv.imwrite('Images/previousB.jpg', frameB)
+
+
+        key = cv.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    cv.destroyAllWindows()
+
+    stream1.stop()
+    stream2.stop()
