@@ -5,19 +5,26 @@ from difference import *
 from tip import *
 from gameplay import *
 
-stream0 = VideoGear(source=0, logging=True).start() 
-stream1 = VideoGear(source=1, logging=True).start() 
 idx = 0
+calibrationLabelValues = ["Top camera empty", "Top camera left", "Top camera right", "Bottom camera empty", "Bottom camera top", "Bottom camera bottom"]
 
 def takePhoto():
+    # stream0 = VideoGear(source=0, logging=True).start() 
+    # stream1 = VideoGear(source=1, logging=True).start() 
+
     global idx
-    if idx < 3:
-        calibrationImage = stream0.read()
-    else:
-        calibrationImage = stream1.read()
+    # if idx < 3:
+    #     calibrationImage = stream0.read()
+    # else:
+    #     calibrationImage = stream1.read()
     
-    cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
+    # cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
     idx += 1
+
+    # stream0.stop()
+    # stream1.stop()
+
+    return idx, calibrationLabelValues[idx]
 
 def calibrate():
 
@@ -47,10 +54,10 @@ def calibrate():
 
 
 
-master = Tk()
+# master = Tk()
 
-Button(master, text='Take calibration photo', command=takePhoto).pack()
-Button(master, text='Finish calibration', command=calibrate).pack()
+# Button(master, text='Take calibration photo', command=takePhoto).pack()
+# Button(master, text='Finish calibration', command=calibrate).pack()
 
 # stream1 = VideoGear(source=0, logging=True).start() 
 # stream2 = VideoGear(source=1, logging=True).start() 
@@ -78,4 +85,4 @@ Button(master, text='Finish calibration', command=calibrate).pack()
 # stream1.stop()
 # stream2.stop()
 
-master.mainloop()
+#master.mainloop()
