@@ -90,4 +90,3 @@ def calculatePoint(a, b, ratio):
         point = 2 * point
 
     return point    
-

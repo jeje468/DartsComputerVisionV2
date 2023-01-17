@@ -49,7 +49,7 @@ def startGame(boardPoints):
 
             if frameCount == 3:
                 cntsA, boardContoursA, contourFoundA = retrieveDartContour(previousA, frameA, 10, "A")
-                cntsB, boardContoursB, contourFoundB = retrieveDartContour(previousB, frameB, 30, "B")
+                cntsB, boardContoursB, contourFoundB = retrieveDartContour(previousB, frameB, 15, "B")
 
                 tipA = findTip(boardContoursA, contourFoundA, "A")
                 tipB = findTip(boardContoursB, contourFoundB, "B")
@@ -64,6 +64,9 @@ def startGame(boardPoints):
 
                 hitCount += 1
                 frameCount = 0
+
+                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_A.jpg', boardContoursA)
+                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_B.jpg', boardContoursB)
 
                 cv.imwrite('Images/previousA.jpg', frameA)
                 cv.imwrite('Images/previousB.jpg', frameB)
