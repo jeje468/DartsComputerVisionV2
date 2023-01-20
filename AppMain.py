@@ -7,8 +7,7 @@ from calibrate import *
 
 #define our different screens
 class MainWindow(Screen):
-    def startGame(self):
-        calibrate()
+    pass
 
 
 class CalibrationWindow(Screen):
@@ -16,8 +15,22 @@ class CalibrationWindow(Screen):
         idx, label = takePhoto()
         self.ids.calibration_label.text = label
 
-        if idx == 5:
+        if idx == 6:
             self.ids.calibration_button.disabled = True
+
+class GameplayWindow(Screen):
+    def startGame(self):
+        playerPointsLabel = ""
+        calibrationPoints = calibrate()
+        playersPoints = startGame(calibrationPoints)
+
+        for i in range (0, len(playersPoints)):
+            if i == 0:
+                playerPointsLabel += str(playersPoints[i])
+            else:
+                playerPointsLabel += " + " + str(playersPoints[i])
+        
+        self.ids.gameplay_points_label.text = playerPointsLabel
 
 class WindowManager(ScreenManager):
     pass

@@ -3,3 +3,5 @@
     -Oldalsó kameránál kellett kontraszt növelés
 2. Két lámpa nem segített
 3. Kalibrációhoz bevezettem egy vonalat a kép közepére, hogy a kamerákat megfelően lehessen pozícionálni.
+4. Két kamera esetén a megfelelő aránnyal kellett beszorozni a két koordináta értékét, nem volt elég az egyikkel, 
+    mert lehet, hogy a két kamera távolsága a táblától eltér

@@ -25,6 +25,9 @@ def startGame(boardPoints):
         frameA = stream1.read()
         frameB = stream2.read()
 
+        cv.imwrite('Images/emptyA.jpg', frameA)
+        cv.imwrite('Images/emptyB.jpg', frameB)
+
         if frameA is None or frameB is None:
             break
 
@@ -32,8 +35,8 @@ def startGame(boardPoints):
             cv.imwrite('Images/previousA.jpg', frameA)
             cv.imwrite('Images/previousB.jpg', frameB)
         
-        cv.imshow("Output Frame1", frameA)
-        cv.imshow("Output Frame2", frameB)
+        #cv.imshow("Output Frame1", frameA)
+        #cv.imshow("Output Frame2", frameB)
 
         cv.imwrite('Images/currentA.jpg', frameA)
         cv.imwrite('Images/currentB.jpg', frameB)
@@ -57,8 +60,9 @@ def startGame(boardPoints):
                 diffA = centerOfBoard[0] - tipA[0]
                 diffB = centerOfBoard[1] - tipB[0]
 
-                ratio = 34 / (boardPoints[3][0] - boardPoints[2][0]) 
-                point = calculatePoint(diffA, diffB, ratio) 
+                ratioA = abs(34 / (boardPoints[1][0] - boardPoints[0][0])) 
+                ratioB = abs(34 / (boardPoints[3][0] - boardPoints[2][0])) 
+                point = calculatePoint(diffA, diffB, ratioA, ratioB) 
 
                 points.append(point)
 
@@ -70,11 +74,10 @@ def startGame(boardPoints):
 
                 cv.imwrite('Images/previousA.jpg', frameA)
                 cv.imwrite('Images/previousB.jpg', frameB)
-
-
-        key = cv.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
+            
+        if len(points) == 3:
+            return points
+        
 
     cv.destroyAllWindows()
 

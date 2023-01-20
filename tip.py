@@ -59,9 +59,11 @@ def findTip(boardContours, contourFound, camera):
 
 #def calculatePoint(tipA, tipB):
 
-def calculatePoint(a, b, ratio):
-     
-    dist = math.sqrt(a * a + b * b) * ratio
+def calculatePoint(a, b, ratioA, ratioB):
+
+    xDistInCm = a * ratioA
+    yDistInCm = b * ratioB 
+    dist = math.sqrt(xDistInCm**2 + yDistInCm**2)
 
     dotProduct = a * 10 + b * 0
     modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(10 * 10 + 0 * 0) 

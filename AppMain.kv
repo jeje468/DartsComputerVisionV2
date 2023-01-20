@@ -1,5 +1,6 @@
 WindowManager:
     MainWindow:
+    GameplayWindow:
     CalibrationWindow:
 
 <MainWindow>:
@@ -20,7 +21,9 @@ WindowManager:
             font_size: 40
             pos_hint: {'center_x': .5}
             size_hint: (.5, .5)
-            pn_press: root.startGame()
+            on_release:
+                app.root.current = "gameplay"
+                root.manager.transition.direction = "left"
 
         Button:
             text: "Calibrate"
@@ -40,7 +43,49 @@ WindowManager:
                 app.root.current = "second"
                 root.manager.transition.direction = "left"
 
+
+<GameplayWindow>:
+    name: "gameplay"
     
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 30
+        padding: 30
+
+        Label:
+            id: player_label
+            text: root.playerLabel
+            font_size: 60
+
+        # Image:
+        #     source: 'Images/BoardsForPoints/dart_board.png'
+        #     allow_stretch: True
+        #     keep_ratio: True
+
+        Label:
+            id: gameplay_points_label
+            text: "0"
+            font_size: 120
+
+        Button:
+            id: gameplay_button
+            text: "Start game"
+            font_size: 40
+            pos_hint: {'center_x': .5}
+            size_hint: (.5, .5)
+            on_press: root.startGame()
+        
+        Button:
+            text: "Go back"
+            font_size: 40
+            pos_hint: {'center_y': .8}
+            size_hint: (.25, .25)
+            on_release: 
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
+
+
 <CalibrationWindow>:
     name: "calibration"
 
@@ -56,7 +101,7 @@ WindowManager:
 
         Label:
             id: calibration_label
-            text: ""
+            text: "Top camera empty"
             font_size: 40
 
         Button:

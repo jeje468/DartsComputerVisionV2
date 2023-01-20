@@ -9,20 +9,20 @@ idx = 0
 calibrationLabelValues = ["Top camera empty", "Top camera left", "Top camera right", "Bottom camera empty", "Bottom camera top", "Bottom camera bottom"]
 
 def takePhoto():
-    # stream0 = VideoGear(source=0, logging=True).start() 
-    # stream1 = VideoGear(source=1, logging=True).start() 
+    stream0 = VideoGear(source=0, logging=True).start() 
+    stream1 = VideoGear(source=1, logging=True).start() 
 
     global idx
-    # if idx < 3:
-    #     calibrationImage = stream0.read()
-    # else:
-    #     calibrationImage = stream1.read()
+    if idx < 3:
+        calibrationImage = stream0.read()
+    else:
+        calibrationImage = stream1.read()
     
-    # cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
+    cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
     idx += 1
 
-    # stream0.stop()
-    # stream1.stop()
+    stream0.stop()
+    stream1.stop()
 
     return idx, calibrationLabelValues[idx]
 
@@ -44,13 +44,24 @@ def calibrate():
     cntsBBottom, boardContoursBBottom, contourFoundBBottom = retrieveDartContour(cameraBEmpty, cameraBBottom, 20, "B")
 
     leftPoint = findTip(boardContoursALeft, contourFoundALeft, "A")
+    cv.circle(boardContoursALeft, (leftPoint[0], leftPoint[1]), 3, (0, 255, 0), -1)
+    cv.imwrite("Images/CalibrationTip/left.jpg", boardContoursALeft)
+
     rightPoint = findTip(boardContoursARight, contourFoundARight, "A")
+    cv.circle(boardContoursARight, (rightPoint[0], rightPoint[1]), 3, (0, 255, 0), -1)
+    cv.imwrite("Images/CalibrationTip/right.jpg", boardContoursARight)
+    
     topPoint = findTip(boardContoursBTop, contourFoundBTop, "B")
+    cv.circle(boardContoursBTop, (topPoint[0], topPoint[1]), 3, (0, 255, 0), -1)
+    cv.imwrite("Images/CalibrationTip/top.jpg", boardContoursBTop)
+
     bottomPoint = findTip(boardContoursBBottom, contourFoundBBottom, "B")
+    cv.circle(boardContoursBBottom, (bottomPoint[0], bottomPoint[1]), 3, (0, 255, 0), -1)
+    cv.imwrite("Images/CalibrationTip/bottom.jpg", boardContoursBBottom)
 
     cv.destroyAllWindows()
 
-    startGame([leftPoint, rightPoint, topPoint, bottomPoint])
+    return [leftPoint, rightPoint, topPoint, bottomPoint]
 
 
 
