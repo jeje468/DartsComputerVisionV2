@@ -2,6 +2,7 @@ WindowManager:
     MainWindow:
     GameplayWindow:
     CalibrationWindow:
+    AddPlayerWindow:
 
 <MainWindow>:
     name: "main"
@@ -21,6 +22,7 @@ WindowManager:
             font_size: 40
             pos_hint: {'center_x': .5}
             size_hint: (.5, .5)
+            on_press: root.setup()
             on_release:
                 app.root.current = "gameplay"
                 root.manager.transition.direction = "left"
@@ -35,12 +37,12 @@ WindowManager:
                 root.manager.transition.direction = "left"
 
         Button:
-            text: "Stats"
+            text: "Add players"
             font_size: 40
             pos_hint: {'center_x': .5}
             size_hint: (.5, .5)
             on_release: 
-                app.root.current = "second"
+                app.root.current = "add_player"
                 root.manager.transition.direction = "left"
 
 
@@ -55,7 +57,7 @@ WindowManager:
 
         Label:
             id: player_label
-            text: root.playerLabel
+            text: root.currentPlayerName
             font_size: 60
 
         # Image:
@@ -74,7 +76,10 @@ WindowManager:
             font_size: 40
             pos_hint: {'center_x': .5}
             size_hint: (.5, .5)
-            on_press: root.startGame()
+            on_press: 
+                root.nextPlayer()
+            on_release:
+                root.onePlayersRound()
         
         Button:
             text: "Go back"
@@ -113,6 +118,57 @@ WindowManager:
             on_press:
                 root.takeCalibrationPhoto()
         
+        Button:
+            text: "Go back"
+            font_size: 40
+            pos_hint: {'center_y': .8}
+            size_hint: (.25, .25)
+            on_release: 
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
+
+<AddPlayerWindow>:
+    name: "add_player"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 30
+        padding: 30
+    
+        Label:
+            text: "Add players"
+            font_size: 60
+
+        Label:
+            id: players_label
+            text: ""
+            font_size: 60
+        
+        TextInput:
+            id: player_text_input
+            text: ""
+            font_size: 60
+            pos_hint: {'center_x': .5}
+            size_hint: (.5, .5)
+            multiline: False
+        
+        Button:
+            id: add_player_button
+            text: "Add player"
+            font_size: 40
+            pos_hint: {'center_x': .5}
+            size_hint: (.5, .5)
+            on_press: root.addPlayer()
+        
+        Button:
+            id: add_player_button
+            text: "Remove player"
+            font_size: 40
+            pos_hint: {'center_x': .5}
+            size_hint: (.5, .5)
+            on_press: root.removePlayer()
+
         Button:
             text: "Go back"
             font_size: 40

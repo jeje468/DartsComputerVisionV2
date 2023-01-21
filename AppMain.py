@@ -4,22 +4,25 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from calibrate import *
+from kivy.properties import StringProperty
 
 #define our different screens
 class MainWindow(Screen):
-    pass
-
-
-class CalibrationWindow(Screen):
-    def takeCalibrationPhoto(self):
-        idx, label = takePhoto()
-        self.ids.calibration_label.text = label
-
-        if idx == 6:
-            self.ids.calibration_button.disabled = True
-
+    def setup(self):
+        self.manager.get_screen("gameplay").ids.player_label.text = self.manager.get_screen("add_player").ids.players_label.text.split(", ")[0]
+        GameplayWindow.players = self.manager.get_screen("add_player").ids.players_label.text.split(", ")
+        
 class GameplayWindow(Screen):
-    def startGame(self):
+    players = []
+    currentPlayerIdx = 0
+    currentPlayerName = StringProperty("")
+
+    def nextPlayer(self):
+        self.ids.gameplay_points_label.text = "0"
+        self.currentPlayerName = self.players[self.currentPlayerIdx % len(self.players)]
+        self.currentPlayerIdx += 1
+
+    def onePlayersRound(self):
         playerPointsLabel = ""
         calibrationPoints = calibrate()
         playersPoints = startGame(calibrationPoints)
@@ -31,6 +34,48 @@ class GameplayWindow(Screen):
                 playerPointsLabel += " + " + str(playersPoints[i])
         
         self.ids.gameplay_points_label.text = playerPointsLabel
+        print("Next player")
+
+        #self.ids.gameplay_points_label.text = "0"
+
+        if self.currentPlayerIdx == 1:
+            self.ids.gameplay_button.text = "Next player"
+
+    def on_currentPlayerName(self, instance, value):
+        self.text = value
+
+class AddPlayerWindow(Screen):
+    def addPlayer(self):
+        if self.ids.players_label.text == "":
+            self.ids.players_label.text = self.ids.player_text_input.text
+        else:
+            self.ids.players_label.text += ", " + self.ids.player_text_input.text
+
+        self.ids.player_text_input.text = ""
+    
+    def removePlayer(self):
+        playersLabel = self.ids.players_label.text
+        players = playersLabel.split(", ")
+        players.pop()
+
+        playersLabel = ""
+        
+        for i in range (0, len(players)):
+            if i == 0:
+                playersLabel = players[i]
+            else:
+                playersLabel += ", " + players[i]
+        
+        self.ids.players_label.text = playersLabel
+
+
+class CalibrationWindow(Screen):
+    def takeCalibrationPhoto(self):
+        idx, label = takePhoto()
+        self.ids.calibration_label.text = label
+
+        if idx == 6:
+            self.ids.calibration_button.disabled = True
 
 class WindowManager(ScreenManager):
     pass
