@@ -6,7 +6,6 @@ from tip import *
 from gameplay import *
 
 idx = 0
-calibrationLabelValues = ["Top camera empty", "Top camera left", "Top camera right", "Bottom camera empty", "Bottom camera top", "Bottom camera bottom"]
 
 def takePhoto():
     stream0 = VideoGear(source=0, logging=True).start() 
@@ -23,8 +22,6 @@ def takePhoto():
 
     stream0.stop()
     stream1.stop()
-
-    return idx, calibrationLabelValues[idx]
 
 def calibrate():
 
@@ -96,4 +93,4 @@ def calibrate():
 # stream1.stop()
 # stream2.stop()
 
-#master.mainloop()
+# master.mainloop()

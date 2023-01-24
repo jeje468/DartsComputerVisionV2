@@ -5,3 +5,4 @@
 3. Kalibrációhoz bevezettem egy vonalat a kép közepére, hogy a kamerákat megfelően lehessen pozícionálni.
 4. Két kamera esetén a megfelelő aránnyal kellett beszorozni a két koordináta értékét, nem volt elég az egyikkel, 
     mert lehet, hogy a két kamera távolsága a táblától eltér
+5. Label frissítés nem sikerült játékos neveknél, ezért on_press és on_release-el kellett megoldani

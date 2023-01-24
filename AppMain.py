@@ -11,11 +11,13 @@ class MainWindow(Screen):
     def setup(self):
         self.manager.get_screen("gameplay").ids.player_label.text = self.manager.get_screen("add_player").ids.players_label.text.split(", ")[0]
         GameplayWindow.players = self.manager.get_screen("add_player").ids.players_label.text.split(", ")
+        GameplayWindow.calibrationPoints = calibrate()
         
 class GameplayWindow(Screen):
     players = []
     currentPlayerIdx = 0
     currentPlayerName = StringProperty("")
+    calibrationPoints = []
 
     def nextPlayer(self):
         self.ids.gameplay_points_label.text = "0"
@@ -24,8 +26,7 @@ class GameplayWindow(Screen):
 
     def onePlayersRound(self):
         playerPointsLabel = ""
-        calibrationPoints = calibrate()
-        playersPoints = startGame(calibrationPoints)
+        playersPoints = startGame(self.calibrationPoints)
 
         for i in range (0, len(playersPoints)):
             if i == 0:
@@ -70,11 +71,18 @@ class AddPlayerWindow(Screen):
 
 
 class CalibrationWindow(Screen):
-    def takeCalibrationPhoto(self):
-        idx, label = takePhoto()
-        self.ids.calibration_label.text = label
+    calibrationLabelValues = ["Top camera empty", "Top camera left", "Top camera right", "Bottom camera empty", "Bottom camera top", "Bottom camera bottom"]
+    idx = 0
 
-        if idx == 6:
+    def takeCalibrationPhoto(self):
+        takePhoto()
+
+        self.idx += 1
+        
+        if self.idx < len(self.calibrationLabelValues):
+            self.ids.calibration_label.text = self.calibrationLabelValues[self.idx]
+        
+        if idx == 5:
             self.ids.calibration_button.disabled = True
 
 class WindowManager(ScreenManager):
