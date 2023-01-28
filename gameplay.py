@@ -3,6 +3,7 @@ import cv2 as cv
 import os
 from difference import *
 from tip import *
+import time
 
 def startGame(boardPoints):
 
@@ -25,6 +26,10 @@ def startGame(boardPoints):
         frameA = stream1.read()
         frameB = stream2.read()
 
+        if not os.path.isfile('Images/emptyA.jpg'):
+            cv.imwrite('Images/emptyA.jpg', frameA)
+            cv.imwrite('Images/emptyB.jpg', frameB)
+
         if frameA is None or frameB is None:
             break
 
@@ -32,8 +37,8 @@ def startGame(boardPoints):
             cv.imwrite('Images/previousA.jpg', frameA)
             cv.imwrite('Images/previousB.jpg', frameB)
         
-        cv.imshow("Output Frame1", frameA)
-        cv.imshow("Output Frame2", frameB)
+        #cv.imshow("Output Frame1", frameA)
+        #cv.imshow("Output Frame2", frameB)
 
         cv.imwrite('Images/currentA.jpg', frameA)
         cv.imwrite('Images/currentB.jpg', frameB)
@@ -57,8 +62,9 @@ def startGame(boardPoints):
                 diffA = centerOfBoard[0] - tipA[0]
                 diffB = centerOfBoard[1] - tipB[0]
 
-                ratio = 34 / (boardPoints[3][0] - boardPoints[2][0]) 
-                point = calculatePoint(diffA, diffB, ratio) 
+                ratioA = abs(34 / (boardPoints[1][0] - boardPoints[0][0])) 
+                ratioB = abs(34 / (boardPoints[3][0] - boardPoints[2][0])) 
+                point = calculatePoint(diffA, diffB, ratioA, ratioB) 
 
                 points.append(point)
 
@@ -70,13 +76,44 @@ def startGame(boardPoints):
 
                 cv.imwrite('Images/previousA.jpg', frameA)
                 cv.imwrite('Images/previousB.jpg', frameB)
-
-
-        key = cv.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
+            
+        if len(points) == 3:
+            return points
+        
 
     cv.destroyAllWindows()
+
+    stream1.stop()
+    stream2.stop()
+
+def waitForEmptyBoard():
+    stream1 = VideoGear(source=0, logging=True).start() 
+    stream2 = VideoGear(source=1, logging=True).start() 
+
+    emptyBoardA = cv.imread("Images/emptyA.jpg")
+    emptyBoardB = cv.imread("Images/emptyB.jpg")
+
+    for i in range(1, 10):
+        frameA = stream1.read()
+        frameB = stream2.read()
+    
+    cv.imwrite("Images/frameA.jpg", frameA)
+    cv.imwrite("Images/frameB.jpg", frameB)
+
+    cntsA, boardContoursA, contourFoundA = findContour(emptyBoardA, frameA, 10, "A")
+    cntsB, boardContoursB, contourFoundB = findContour(emptyBoardB, frameB, 10, "B")
+
+    while contourFoundA or contourFoundB:
+        time.sleep(0.2)
+
+        frameA = stream1.read()
+        frameB = stream2.read()
+
+        cntsA, boardContoursA, contourFoundA = findContour(emptyBoardA, frameA, 200, "A")
+        cntsB, boardContoursB, contourFoundB = findContour(emptyBoardB, frameB, 200, "B")
+    
+    os.remove("Images/emptyA.jpg")
+    os.remove("Images/emptyB.jpg")
 
     stream1.stop()
     stream2.stop()
