@@ -11,10 +11,14 @@ class MainWindow(Screen):
     def setup(self):
         self.manager.get_screen("gameplay").ids.player_label.text = self.manager.get_screen("add_player").ids.players_label.text.split(", ")[0]
         GameplayWindow.players = self.manager.get_screen("add_player").ids.players_label.text.split(", ")
+        for i in range (0, len(GameplayWindow.players)):
+            GameplayWindow.playerScores.append(501)
+
         GameplayWindow.calibrationPoints = calibrate()
         
 class GameplayWindow(Screen):
     players = []
+    playerScores = []
     currentPlayerIdx = 0
     currentPlayerName = StringProperty("")
     calibrationPoints = []
@@ -22,7 +26,7 @@ class GameplayWindow(Screen):
     def nextPlayer(self):
         self.ids.gameplay_points_label.text = "0"
         self.currentPlayerName = self.players[self.currentPlayerIdx % len(self.players)]
-        self.currentPlayerIdx += 1
+        self.ids.gameplay_total_points_label.text = str(self.playerScores[self.currentPlayerIdx % len(self.players)])
 
     def onePlayersRound(self):
         playerPointsLabel = ""
@@ -34,6 +38,11 @@ class GameplayWindow(Screen):
             else:
                 playerPointsLabel += " + " + str(playersPoints[i])
         
+        score = eval(playerPointsLabel)
+        self.playerScores[self.currentPlayerIdx % len(self.players)] -= score
+        self.ids.gameplay_total_points_label.text = str(self.playerScores[self.currentPlayerIdx % len(self.players)])
+        playerPointsLabel += " = " + str(score)
+
         self.ids.gameplay_points_label.text = playerPointsLabel
         print("Next player")
 
@@ -41,6 +50,8 @@ class GameplayWindow(Screen):
 
         if self.currentPlayerIdx == 1:
             self.ids.gameplay_button.text = "Next player"
+        
+        self.currentPlayerIdx += 1
 
     def on_currentPlayerName(self, instance, value):
         self.text = value
