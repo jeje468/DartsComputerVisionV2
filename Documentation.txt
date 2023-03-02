@@ -6,3 +6,4 @@
 4. Két kamera esetén a megfelelő aránnyal kellett beszorozni a két koordináta értékét, nem volt elég az egyikkel, 
     mert lehet, hogy a két kamera távolsága a táblától eltér
 5. Label frissítés nem sikerült játékos neveknél, ezért on_press és on_release-el kellett megoldani
+6. Amit Vámossy írt, a távolságtól függ, hogy két pont közti távolságot mekkorának látja a kamera
