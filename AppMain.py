@@ -5,14 +5,14 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from calibrate import *
 from kivy.properties import StringProperty
+from outshot import *
 
-#define our different screens
 class MainWindow(Screen):
     def setup(self):
         self.manager.get_screen("gameplay").ids.player_label.text = self.manager.get_screen("add_player").ids.players_label.text.split(", ")[0]
         GameplayWindow.players = self.manager.get_screen("add_player").ids.players_label.text.split(", ")
         for i in range (0, len(GameplayWindow.players)):
-            GameplayWindow.playerScores.append(501)
+            GameplayWindow.playerScores.append(170)
 
         GameplayWindow.calibrationPoints = calibrate()
         
@@ -25,6 +25,7 @@ class GameplayWindow(Screen):
 
     def nextPlayer(self):
         self.ids.gameplay_points_label.text = "0"
+        self.ids.checkout_label.text = calculateOuthsot(self.playerScores[self.currentPlayerIdx % len(self.players)])
         self.currentPlayerName = self.players[self.currentPlayerIdx % len(self.players)]
         self.ids.gameplay_total_points_label.text = str(self.playerScores[self.currentPlayerIdx % len(self.players)])
 

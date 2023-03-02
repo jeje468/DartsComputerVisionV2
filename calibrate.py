@@ -16,6 +16,8 @@ def takePhoto():
         calibrationImage = stream0.read()
     else:
         calibrationImage = stream1.read()
+
+    #calibrationImage = cv.undistort(calibrationImage, mtx, dist, None, newcameramtx)
     
     cv.imwrite('Images/Calibration/calibration_' + str(idx) + '.jpg', calibrationImage)
     idx += 1

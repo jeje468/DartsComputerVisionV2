@@ -6,3 +6,5 @@
 4. Két kamera esetén a megfelelő aránnyal kellett beszorozni a két koordináta értékét, nem volt elég az egyikkel, 
     mert lehet, hogy a két kamera távolsága a táblától eltér
 5. Label frissítés nem sikerült játékos neveknél, ezért on_press és on_release-el kellett megoldani
+6. Fisheye miatt sokszor rosszul kalkulált, próbáltam kalibrálni 
+7. Outshot-ot nem olyan egyszerű számolni, mert duplával kell végezni. Lehet használni visszalépéses keresést, vagy txt-ből kiolvasni
