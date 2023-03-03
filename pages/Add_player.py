@@ -3,30 +3,42 @@ import streamlit as st
 if "players" not in st.session_state:
     players = []
     with open('players.txt') as f:
-        lines = f.readlines()
-        for line in lines:
-            players.append(line)
+        line = f.readline()
+        playerStrings = line.split(",")
+        for player in playerStrings:
+            if player != "":
+                players.append(player)
 
     st.session_state['players'] = players
 
 st.title("Add players")
 
-playerInput = st.text_input("Add a new player")
-addButton = st.button("Add")
-
-with st.expander("Select players"):
-    playerMultiSelect = st.multiselect("Select players", st.session_state.players)
-    savePlayersButton = st.button("Save players")
-
+with st.form("add_player_form", clear_on_submit=True):
+    playerInput = st.text_input("First please add any new players.")
+    addButton = st.form_submit_button("Add")
 
 if addButton:
-    if playerInput not in st.session_state.players:
-        st.session_state.players.append(playerInput)
+    if playerInput == "":
+        st.warning("Players name can't be empty.")
+    else:
+        if playerInput not in st.session_state.players:
+            st.session_state.players.append(playerInput)
+        else:
+            st.warning("Such a player already exists")
+
+with st.form("select_players_form", clear_on_submit=False):
+    playerMultiSelect = st.multiselect("Next select the players who would like to play.", st.session_state.players)
+    savePlayersButton = st.form_submit_button("Save players")
 
 if savePlayersButton:
     #TODO - fix player export
-    # f = open("players.txt", "w")
-    # f.write("\n".join(st.session_state.players))
-    if "selectedPlayers" not in st.session_state:
-        st.session_state['selectedPlayers'] = playerMultiSelect
+    if len(playerMultiSelect) == 0:
+        st.warning("Please select at least one player")
+    else:
+        f = open("players.txt", "w")
+        f.write(",".join(st.session_state.players))
+        f.close()
+        if "selectedPlayers" not in st.session_state:
+            print(playerMultiSelect)
+            st.session_state["selectedPlayers"] = playerMultiSelect
 

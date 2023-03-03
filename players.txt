@@ -1,7 +1,1 @@
-Jani
-Béla
-Géza
-Máté
-Gyula
-Tomi
-Mari
+Jani,Béla,Géza,Máté,Gyula,Tomi,Mari,Tarzan,Pali
