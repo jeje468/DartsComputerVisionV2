@@ -35,8 +35,6 @@ if saveButton:
     #TODO - fix player export
     if len(playerMultiSelect) == 0:
         st.warning("Please select at least one player")
-    elif pointsSelect == None:
-        st.warning("Please select a starting point")
     else:
         f = open("players.txt", "w")
         f.write(",".join(st.session_state.players))
