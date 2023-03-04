@@ -56,9 +56,16 @@ def calibrate():
     cv.circle(boardContoursBBottom, (bottomPoint[0], bottomPoint[1]), 3, (0, 255, 0), -1)
     cv.imwrite("Images/CalibrationTip/bottom.jpg", boardContoursBBottom)
 
-    cv.destroyAllWindows()
+    points = [leftPoint, rightPoint, topPoint, bottomPoint]
 
-    return [leftPoint, rightPoint, topPoint, bottomPoint]
+    f = open("calibrationPoints.txt", "w")
+
+    for point in points:
+        f.write(str(point[0]) + "," + str(point[1]) + "\n")
+
+    f.close()
+
+    #return [leftPoint, rightPoint, topPoint, bottomPoint]
 
 
 

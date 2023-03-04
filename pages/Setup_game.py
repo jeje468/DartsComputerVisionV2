@@ -26,14 +26,17 @@ if addButton:
         else:
             st.warning("Such a player already exists")
 
-with st.form("select_players_form", clear_on_submit=False):
+with st.form("select_form", clear_on_submit=False):
     playerMultiSelect = st.multiselect("Next select the players who would like to play.", st.session_state.players)
-    savePlayersButton = st.form_submit_button("Save players")
+    pointsSelect = st.selectbox("Select the starting points.", list(range(101, 1101, 100)))
+    saveButton = st.form_submit_button("Save")
 
-if savePlayersButton:
+if saveButton:
     #TODO - fix player export
     if len(playerMultiSelect) == 0:
         st.warning("Please select at least one player")
+    elif pointsSelect == None:
+        st.warning("Please select a starting point")
     else:
         f = open("players.txt", "w")
         f.write(",".join(st.session_state.players))
@@ -41,4 +44,7 @@ if savePlayersButton:
         if "selectedPlayers" not in st.session_state:
             print(playerMultiSelect)
             st.session_state["selectedPlayers"] = playerMultiSelect
+        if "startingPoint" not in st.session_state:
+            st.session_state["startingPoint"] = pointsSelect
+
 

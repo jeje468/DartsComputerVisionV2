@@ -1,6 +1,7 @@
 import streamlit as st
 import cv2 as cv
 from vidgear.gears import VideoGear
+from calibrate import *
 
 
 st.title("Calibrate cameras")
@@ -29,3 +30,28 @@ while run:
 
 stream1.stop()
 stream2.stop()
+
+
+calibrationLabelValues = ["Top camera empty", "Top camera left", "Top camera right", "Side camera empty", "Side camera top", "Side camera bottom", "Done"]
+if "calibrationIdx" not in st.session_state:
+    st.session_state['calibrationIdx'] = 0
+if 'buttonDisabled' not in st.session_state:
+    st.session_state['buttonDisabled'] = False
+
+
+st.subheader("2. Take six calibration photos of the board.")
+calibrationText = st.text(calibrationLabelValues[st.session_state['calibrationIdx']])
+calibrateButton = st.button("Take a photo", disabled= st.session_state['buttonDisabled'])
+
+if calibrateButton:
+    if st.session_state['calibrationIdx'] <= 5:
+        takePhoto()
+        st.session_state['calibrationIdx'] += 1
+        calibrationText.write(calibrationLabelValues[st.session_state['calibrationIdx']])
+
+    if st.session_state['calibrationIdx'] == 5:
+        st.session_state['buttonDisabled'] = True
+        calibrate()
+
+
+
