@@ -18,8 +18,8 @@ def checkDifference(current, previous, fileName):
 def retrieveDartContour(board, dart, area, camera):
     
     # if camera == "A":
-    dart = cv.fastNlMeansDenoisingColored(dart,None,20,20,7,21) 
-    board = cv.fastNlMeansDenoisingColored(board,None,20,20,7,21)
+    #dart = cv.fastNlMeansDenoisingColored(dart,None,20,20,7,21) 
+    #board = cv.fastNlMeansDenoisingColored(board,None,20,20,7,21)
     #cv.imwrite('Images/' + camera + '/grain.jpg', dart)
 
     # if camera == "B":

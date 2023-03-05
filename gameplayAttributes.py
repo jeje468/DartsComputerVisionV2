@@ -9,3 +9,6 @@ class GameplayAttributes:
         self.calibrationPoints = calibrationPoints
         self.players = players
         self.startingPoint = startingPoint
+
+        for i in range(0, len(players)):
+            self.points.append(startingPoint)
