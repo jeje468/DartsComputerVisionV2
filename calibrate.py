@@ -5,10 +5,22 @@ from difference import *
 from tip import *
 from gameplay import *
 
+
+def getCalibrationPoints():
+    calibrationPoints = []
+
+    with open('calibrationPoints.txt') as f:
+        lines = f.readlines()
+        for line in lines:
+            coordinates = line.rstrip('\n').split(",")
+            calibrationPoints.append((int(coordinates[0]), int(coordinates[1])))
+
+    return calibrationPoints
+
 idx = 0
 
 def takePhoto():
-    stream0 = VideoGear(source=0, logging=True).start() 
+    stream0 = VideoGear(source=2, logging=True).start() 
     stream1 = VideoGear(source=1, logging=True).start() 
 
     global idx

@@ -62,7 +62,12 @@ def findTip(boardContours, contourFound, camera):
 def calculatePoint(a, b, ratioA, ratioB):
 
     xDistInCm = a * ratioA
-    yDistInCm = b * ratioB 
+    yDistInCm = b * ratioB
+
+    f = open("distanceData.txt", "a")
+    f.write(str(abs(round(xDistInCm, 2))) + "," + str(abs(round(yDistInCm, 2))) + "\n")
+    f.close
+ 
     dist = math.sqrt(xDistInCm**2 + yDistInCm**2)
 
     dotProduct = a * 10 + b * 0

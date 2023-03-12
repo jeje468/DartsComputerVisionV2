@@ -7,7 +7,7 @@ from calibrate import *
 st.title("Calibrate cameras")
 st.subheader("1. Set the positions of the cameras where the green line intersects with the middle of the board.")
 
-stream1 = VideoGear(source=0, logging=True).start() 
+stream1 = VideoGear(source=2, logging=True).start() 
 stream2 = VideoGear(source=1, logging=True).start() 
 
 run = st.checkbox('Show webcam feed')

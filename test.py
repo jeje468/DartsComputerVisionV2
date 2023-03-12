@@ -13,4 +13,4 @@ with open('calibrationPoints.txt') as f:
         coordinates = line.rstrip('\n').split(",")
         calibrationPoints.append((int(coordinates[0]), int(coordinates[1])))
 
-startGame(calibrationPoints)
+startGame(calibrationPoints, 10)

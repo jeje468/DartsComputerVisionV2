@@ -5,10 +5,10 @@ from difference import *
 from tip import *
 import time
 
-def startGame(boardPoints):
-
+def startGame(boardPoints, currentPlayersPoints):
+    playersPoints = currentPlayersPoints
     centerOfBoard = [(boardPoints[0][0] + boardPoints[1][0]) // 2, (boardPoints[2][0] + boardPoints[3][0]) // 2]
-    stream1 = VideoGear(source=0, logging=True).start() 
+    stream1 = VideoGear(source=2, logging=True).start() 
     stream2 = VideoGear(source=1, logging=True).start() 
 
     hitCount = 0
@@ -67,6 +67,11 @@ def startGame(boardPoints):
                 point = calculatePoint(diffA, diffB, ratioA, ratioB) 
 
                 points.append(point)
+
+                if playersPoints - point <= 0:
+                    return points
+                else:
+                    playersPoints -= point
 
                 hitCount += 1
                 frameCount = 0
