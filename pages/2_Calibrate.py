@@ -45,11 +45,12 @@ calibrateButton = st.button("Take a photo", disabled= st.session_state['buttonDi
 
 if calibrateButton:
     if st.session_state['calibrationIdx'] <= 5:
-        takePhoto()
+        takePhoto(st.session_state['calibrationIdx'])
         st.session_state['calibrationIdx'] += 1
         calibrationText.write(calibrationLabelValues[st.session_state['calibrationIdx']])
 
-    if st.session_state['calibrationIdx'] == 5:
+    if st.session_state['calibrationIdx'] == 6:
+        st.session_state['calibrationIdx'] = 0
         st.session_state['buttonDisabled'] = True
         calibrate()
 

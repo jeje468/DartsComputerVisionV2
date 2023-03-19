@@ -1,6 +1,7 @@
 import streamlit as st
 from calibrate import *
 from gameplay import *
+from test import *
 
 if "distances" not in st.session_state:
     st.session_state["distances"] = []
@@ -8,14 +9,18 @@ if "distances" not in st.session_state:
 if "points" not in st.session_state:
     st.session_state["points"] = []
 
+if "test2Data" not in st.session_state:
+    st.session_state["test2Data"] = []
+
+
  
-st.title("Test")
+st.title("Test 1")
 
 nextButton = st.button("Next")
 
 calibrationPoints = getCalibrationPoints()
 
-with st.form("Add data form", clear_on_submit=True):
+with st.form("test1_form", clear_on_submit=True):
     col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
     with col1:
@@ -97,6 +102,73 @@ if nextButton:
                 detectedY3.write(line.split(",")[1].strip())
 
     f = open("distanceData.txt", "w")
-    f.write("")
     f.close()
+
+st.title("Test 2")
+
+emptyButton = st.button("Take empty image")
+startButton = st.button("Start")
+
+with st.form("test2_form", clear_on_submit=True):
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+
+    with col1:
+        st.write("##")
+        detectedHit = st.text("Detected hit")
+
+    with col2:
+        actualHit = st.text_input("Actual hit")  
+
+    with col3:
+        st.write("##")
+        detectedX = st.text("Detected x") 
+    
+    with col4:
+        actualX = st.text_input("Actual x")
+    
+    with col5:
+        st.write("##")
+        detectedY = st.text("Detected y")
+    
+    with col6:
+        actualY = st.text_input("Actual y")
+    
+    with col7:
+        #1 -> single inner, 2 -> triple, 3 -> single outer, 4 -> double
+        zone = st.text_input("Zone")
+
+
+
+    test2Submit = st.form_submit_button("Submit")
+
+if emptyButton:
+    takeEmptyImage()
+
+
+if startButton:
+    point = test2()
+    print(point)
+
+    detectedHit.write(str(point))
+
+    with open('distanceData.txt') as f:
+        line = f.readlines()[-1]
+        detectedX.write(line.split(",")[0])
+        detectedY.write(line.split(",")[1].strip())
+
+        st.session_state["test2Data"] = [str(point), line.split(",")[0], line.split(",")[1].strip()]
+
+    f = open("distanceData.txt", "w")
+    f.close()
+
+if test2Submit:
+    f = open("testData2.txt", "a")
+    f.write(st.session_state["test2Data"][0] + ", " + actualHit + ", " + st.session_state["test2Data"][1] + ", " + actualX + ", " + st.session_state["test2Data"][2] + ", " + actualY + ", " + str(zone) + "\n")
+    f.close()
+
+
+
+
+
+
 

@@ -17,13 +17,10 @@ def getCalibrationPoints():
 
     return calibrationPoints
 
-idx = 0
-
-def takePhoto():
+def takePhoto(idx):
     stream0 = VideoGear(source=2, logging=True).start() 
     stream1 = VideoGear(source=1, logging=True).start() 
 
-    global idx
     if idx < 3:
         calibrationImage = stream0.read()
     else:

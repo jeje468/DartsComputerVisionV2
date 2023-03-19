@@ -1,5 +1,6 @@
 import cv2 as cv
 import math
+from scipy.interpolate import interp2d
 
 angles = [
     [[0, 9], 6],
@@ -24,6 +25,26 @@ angles = [
     [[315, 333], 15],
     [[333, 351], 10]
 ]
+
+xAndDiff = []
+yAndDiff= []
+datas = []
+
+with open('testData2.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        data = line.split(", ")
+        detectedDist = math.sqrt(float(data[2])**2 + float(data[4])**2)
+        actualDist = math.sqrt(float(data[3])**2 + float(data[5])**2)
+        datas.append((float(data[2]), float(data[4]), actualDist - detectedDist))
+        xAndDiff.append((float(data[2]), float(data[3]), round(float(data[3]) - float(data[2]), 2)))
+        yAndDiff.append((float(data[4]), float(data[5]), round(float(data[5]) - float(data[4]), 2)))
+
+detectedX = list(zip(*xAndDiff))[0]
+detectedY = list(zip(*yAndDiff))[0]
+
+diff = list(zip(*datas))[2]
+interp_func = interp2d(detectedX, detectedY, diff, kind='cubic')
 
 def findTip(boardContours, contourFound, camera):
     maxYCoordinateCenter = max(x['center'][1] for x in contourFound)
@@ -64,11 +85,20 @@ def calculatePoint(a, b, ratioA, ratioB):
     xDistInCm = a * ratioA
     yDistInCm = b * ratioB
 
+    distDifference = interp_func(xDistInCm, yDistInCm)
+
     f = open("distanceData.txt", "a")
     f.write(str(abs(round(xDistInCm, 2))) + "," + str(abs(round(yDistInCm, 2))) + "\n")
     f.close
  
     dist = math.sqrt(xDistInCm**2 + yDistInCm**2)
+
+    if dist <= 0.635:
+        return 50
+    elif 0.635 < dist and dist <= 1.6:
+        return 25
+    
+    dist += distDifference
 
     dotProduct = a * 10 + b * 0
     modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(10 * 10 + 0 * 0) 
@@ -87,10 +117,6 @@ def calculatePoint(a, b, ratioA, ratioB):
 
     if 17 < dist:
         point = 0 * point
-    elif dist <= 0.635:
-        point = 50
-    elif 0.635 < dist and dist <= 1.6:
-        point = 25
     elif 9.9 <= dist and dist <=10.7:
         point = 3 * point
     elif 16.2 <= dist and dist <= 17:
