@@ -1,6 +1,6 @@
 import cv2 as cv
 import math
-from scipy.interpolate import interp2d
+from scipy.interpolate import interp2d, griddata
 
 angles = [
     [[0, 9], 6],
@@ -26,9 +26,18 @@ angles = [
     [[333, 351], 10]
 ]
 
-xAndDiff = []
-yAndDiff= []
-datas = []
+def calculateAngle(a, b):
+    dotProduct = a * 10 + b * 0
+    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(10 * 10 + 0 * 0) 
+    angle = dotProduct/modOfVector1
+    angle = math.degrees(math.acos(angle))
+
+    return angle
+
+detectedX = []
+detectedY = []
+distDiff = []
+angleDiff = []
 
 with open('testData2.txt') as f:
     lines = f.readlines()
@@ -36,15 +45,12 @@ with open('testData2.txt') as f:
         data = line.split(", ")
         detectedDist = math.sqrt(float(data[2])**2 + float(data[4])**2)
         actualDist = math.sqrt(float(data[3])**2 + float(data[5])**2)
-        datas.append((float(data[2]), float(data[4]), actualDist - detectedDist))
-        xAndDiff.append((float(data[2]), float(data[3]), round(float(data[3]) - float(data[2]), 2)))
-        yAndDiff.append((float(data[4]), float(data[5]), round(float(data[5]) - float(data[4]), 2)))
+        detectedX.append(float(data[2]))
+        detectedY.append(float(data[4]))
+        distDiff.append(actualDist - detectedDist)
+        angleDiff.append(calculateAngle(float(data[3]), float(data[5])) - calculateAngle(float(data[2]), float(data[4])))
 
-detectedX = list(zip(*xAndDiff))[0]
-detectedY = list(zip(*yAndDiff))[0]
-
-diff = list(zip(*datas))[2]
-interp_func = interp2d(detectedX, detectedY, diff, kind='cubic')
+interp_func = interp2d(detectedX, detectedY, distDiff, kind='cubic')
 
 def findTip(boardContours, contourFound, camera):
     maxYCoordinateCenter = max(x['center'][1] for x in contourFound)
@@ -104,6 +110,11 @@ def calculatePoint(a, b, ratioA, ratioB):
     modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(10 * 10 + 0 * 0) 
     angle = dotProduct/modOfVector1
     angle = math.degrees(math.acos(angle))
+    print(angle)
+    angleDifference = griddata((detectedX, detectedY), angleDiff, (xDistInCm, yDistInCm), method='cubic')
+    angle += angleDifference
+    print(angle)
+
 
     if b < 0:
         angle = 360 - angle

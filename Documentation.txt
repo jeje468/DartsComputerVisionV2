@@ -12,3 +12,5 @@
 8. Test1: megfelelő helyen történt a kalibrálás
 9. Test2: 11-14 között                                  3 tesztből egyértelműen látszott, hogy a az első volt a legjobb
 10. Test3: 11-8 között
+11. Második fajta teszt, minden szektorba négy helyre beleszúrtuk
+12. Interpolációt több módon is próbáltam
