@@ -49,7 +49,7 @@ def test2():
 
     ratioA = abs(34 / (calibrationPoints[1][0] - calibrationPoints[0][0])) 
     ratioB = abs(34 / (calibrationPoints[3][0] - calibrationPoints[2][0])) 
-    point = calculatePoint(diffA, diffB, ratioA, ratioB) 
+    point, isDouble = calculatePoint(diffA, diffB, ratioA, ratioB) 
 
     return point
     

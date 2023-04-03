@@ -34,10 +34,10 @@ def calculateAngle(a, b):
 
     return angle
 
-detectedX = []
-detectedY = []
 distDiff = []
 angleDiff = []
+detectedCoordinates = []
+
 
 with open('testData2.txt') as f:
     lines = f.readlines()
@@ -45,12 +45,9 @@ with open('testData2.txt') as f:
         data = line.split(", ")
         detectedDist = math.sqrt(float(data[2])**2 + float(data[4])**2)
         actualDist = math.sqrt(float(data[3])**2 + float(data[5])**2)
-        detectedX.append(float(data[2]))
-        detectedY.append(float(data[4]))
+        detectedCoordinates.append([float(data[2]), float(data[4])])
         distDiff.append(actualDist - detectedDist)
         angleDiff.append(calculateAngle(float(data[3]), float(data[5])) - calculateAngle(float(data[2]), float(data[4])))
-
-interp_func = interp2d(detectedX, detectedY, distDiff, kind='cubic')
 
 def findTip(boardContours, contourFound, camera):
     maxYCoordinateCenter = max(x['center'][1] for x in contourFound)
@@ -91,18 +88,18 @@ def calculatePoint(a, b, ratioA, ratioB):
     xDistInCm = a * ratioA
     yDistInCm = b * ratioB
 
-    distDifference = interp_func(xDistInCm, yDistInCm)
+    distDifference = griddata(detectedCoordinates, distDiff, (xDistInCm, yDistInCm), method='cubic')
 
     f = open("distanceData.txt", "a")
-    f.write(str(abs(round(xDistInCm, 2))) + "," + str(abs(round(yDistInCm, 2))) + "\n")
+    f.write(str(round(xDistInCm, 2)) + "," + str(round(yDistInCm, 2)) + "\n")
     f.close
  
     dist = math.sqrt(xDistInCm**2 + yDistInCm**2)
 
     if dist <= 0.635:
-        return 50
+        return 50, True
     elif 0.635 < dist and dist <= 1.6:
-        return 25
+        return 25, False
     
     dist += distDifference
 
@@ -111,7 +108,7 @@ def calculatePoint(a, b, ratioA, ratioB):
     angle = dotProduct/modOfVector1
     angle = math.degrees(math.acos(angle))
     print(angle)
-    angleDifference = griddata((detectedX, detectedY), angleDiff, (xDistInCm, yDistInCm), method='cubic')
+    angleDifference = griddata(detectedCoordinates, angleDiff, (xDistInCm, yDistInCm), method='cubic')
     angle += angleDifference
     print(angle)
 
@@ -125,6 +122,8 @@ def calculatePoint(a, b, ratioA, ratioB):
         if ang[0][0] < angle and angle <= ang[0][1]:
             point = ang[1]
             break
+    
+    isDouble = False
 
     if 17 < dist:
         point = 0 * point
@@ -132,5 +131,6 @@ def calculatePoint(a, b, ratioA, ratioB):
         point = 3 * point
     elif 16.2 <= dist and dist <= 17:
         point = 2 * point
+        isDouble = True
 
-    return point    
+    return point, isDouble    

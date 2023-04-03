@@ -68,6 +68,7 @@ with st.form("test1_form", clear_on_submit=True):
         correct3 = st.text_input("Correct 3")
     
     submitButton = st.form_submit_button("Submit")
+    submitButton2 = st.form_submit_button("Submit2")
 
 if submitButton:
 
@@ -79,8 +80,18 @@ if submitButton:
     st.session_state["points"] = []
     st.session_state["distances"] = []
 
+if submitButton2:
+
+    f = open("testData3.txt", "a")
+    f.write(str(st.session_state["points"][0]) + ", " + actualHit1 + "\n")
+    f.write(str(st.session_state["points"][1]) + ", " + actualHit2 + "\n")
+    f.write(str(st.session_state["points"][2]) + ", " + actualHit3 + "\n")
+    f.close()
+    st.session_state["points"] = []
+    st.session_state["distances"] = []
+
 if nextButton:
-    st.session_state["points"] = startGame(calibrationPoints, 1000)
+    st.session_state["points"], isDouble = startGame(calibrationPoints, 1000)
     detectedHit1.write(str(st.session_state["points"][0]))
     detectedHit2.write(str(st.session_state["points"][1]))
     detectedHit3.write(str(st.session_state["points"][2]))

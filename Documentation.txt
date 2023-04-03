@@ -14,3 +14,6 @@
 10. Test3: 11-8 között
 11. Második fajta teszt, minden szektorba négy helyre beleszúrtuk
 12. Interpolációt több módon is próbáltam
+13. Dupla szektorok sarkaiba teszt majd Interpoláció
+14. Tripla szektorok sarkaiba teszt majd Interpolációt -> ábrán látszik, hogy a tábla közepén még nagy hegy van szóval majd ott is kell sokat szúrni és mérni, hogy kiegyenesedjen
+15. Tripla 8 illetve dupla 5-nél volt elírás emiatt hegy volt a függvényen

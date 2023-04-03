@@ -64,26 +64,26 @@ def startGame(boardPoints, currentPlayersPoints):
 
                 ratioA = abs(34 / (boardPoints[1][0] - boardPoints[0][0])) 
                 ratioB = abs(34 / (boardPoints[3][0] - boardPoints[2][0])) 
-                point = calculatePoint(diffA, diffB, ratioA, ratioB) 
+                point, isDouble = calculatePoint(diffA, diffB, ratioA, ratioB) 
 
                 points.append(point)
 
+                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_A.jpg', boardContoursA)
+                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_B.jpg', boardContoursB)
+                
                 if playersPoints - point <= 0:
-                    return points
+                    return points, isDouble
                 else:
                     playersPoints -= point
 
                 hitCount += 1
                 frameCount = 0
 
-                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_A.jpg', boardContoursA)
-                cv.imwrite('Images/Hits/hit_' + str(hitCount) + '_B.jpg', boardContoursB)
-
                 cv.imwrite('Images/previousA.jpg', frameA)
                 cv.imwrite('Images/previousB.jpg', frameB)
             
         if len(points) == 3:
-            return points
+            return points, isDouble
         
 
     cv.destroyAllWindows()
