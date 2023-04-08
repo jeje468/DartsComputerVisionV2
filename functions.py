@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 from scipy.interpolate import interp2d, griddata
+import scipy.ndimage.filters
 
 def calculateAngle(a, b):
     dotProduct = a * 10 + b * 0
@@ -61,15 +62,24 @@ test2 = interp_func_ang(2.34, 5.75)
 x_grid = np.linspace(min(detectedX),max(detectedX), 100)
 y_grid = np.linspace(min(detectedY),max(detectedY), 100)
 xx, yy = np.meshgrid(x_grid, y_grid)
-diffs_interp = griddata(detectedCoordinates, distDiff, (xx, yy), method='linear')
+dist_interp = griddata(detectedCoordinates, distDiff, (xx, yy), method='cubic')
+angle_interp = griddata(detectedCoordinates, distDiff, (xx, yy), method='cubic')
 test = griddata(detectedCoordinates, distDiff, (-9.42, -5.49), method='linear')
+
+sigma = 1
+smoothed = scipy.ndimage.filters.gaussian_filter(dist_interp, sigma)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 X, Y = np.meshgrid(x_grid, y_grid)
-ax.plot_surface(X, Y, diffs_interp)
+dist_surf = ax.plot_surface(X, Y, dist_interp)
+smoothed_surf = ax.plot_surface(X, Y, smoothed)
+
+dist_surf.set_facecolor((0.2, 0.5, 0.8))
+smoothed_surf.set_facecolor((0.5, 0.8, 0.2))
 
 data = np.genfromtxt("testData3.txt", delimiter=", ")
 equal = np.sum(data[:,0] == data[:,1])
+print(equal)
 
 plt.show()

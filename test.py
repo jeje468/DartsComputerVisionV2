@@ -37,7 +37,7 @@ def test2():
     
     cntsA, boardContoursA, contourFoundA = retrieveDartContour(emptyBoardA, frameA, 10, "A")
     cntsB, boardContoursB, contourFoundB = retrieveDartContour(emptyBoardB, frameB, 15, "B")
-
+    
     cv.imwrite("Images/Test/hit_A.jpg", boardContoursA)
     cv.imwrite("Images/Test/hit_B.jpg", boardContoursB)
 
@@ -62,4 +62,4 @@ def test2():
 #         coordinates = line.rstrip('\n').split(",")
 #         calibrationPoints.append((int(coordinates[0]), int(coordinates[1])))
 
-# startGame(calibrationPoints, 10)
+# startGame(calibrationPoints, 1000)

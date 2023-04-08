@@ -17,3 +17,8 @@
 13. Dupla szektorok sarkaiba teszt majd Interpoláció
 14. Tripla szektorok sarkaiba teszt majd Interpolációt -> ábrán látszik, hogy a tábla közepén még nagy hegy van szóval majd ott is kell sokat szúrni és mérni, hogy kiegyenesedjen
 15. Tripla 8 illetve dupla 5-nél volt elírás emiatt hegy volt a függvényen
+16. Test interpolációhoz S1 = Outer bull és tripla között
+17: Test intepolációhoz S2 = Outer bull szélén
+18. Tripla 11-nél első teszt esetén mikor 4 helyre dugtuk be minden zónánál, valószínúleg rosszul látta
+    a hegyet a kamere és x-nek kb-3t érzékelt -10 helyett, ezért interpolációnál volt egy nagy kiugrás
+19. Tripla 1 környékén árnyék bezavarja a detektálást ami az interpolációt zavarta
