@@ -115,6 +115,8 @@ def calculatePoint(a, b, ratioA, ratioB):
 
     if b < 0:
         angle = 360 - angle
+        if angle > 360:
+            angle = 360
 
     point = 0
 

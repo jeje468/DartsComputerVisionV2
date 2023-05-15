@@ -64,7 +64,7 @@ y_grid = np.linspace(min(detectedY),max(detectedY), 100)
 xx, yy = np.meshgrid(x_grid, y_grid)
 dist_interp = griddata(detectedCoordinates, distDiff, (xx, yy), method='cubic')
 angle_interp = griddata(detectedCoordinates, distDiff, (xx, yy), method='cubic')
-test = griddata(detectedCoordinates, distDiff, (-9.42, -5.49), method='linear')
+test = griddata(detectedCoordinates, distDiff, (2, 2), method='cubic')
 
 sigma = 1
 smoothed = scipy.ndimage.filters.gaussian_filter(dist_interp, sigma)
@@ -73,12 +73,12 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 X, Y = np.meshgrid(x_grid, y_grid)
 dist_surf = ax.plot_surface(X, Y, dist_interp)
-smoothed_surf = ax.plot_surface(X, Y, smoothed)
+#smoothed_surf = ax.plot_surface(X, Y, smoothed)
 
-dist_surf.set_facecolor((0.2, 0.5, 0.8))
-smoothed_surf.set_facecolor((0.5, 0.8, 0.2))
+# dist_surf.set_facecolor((0.2, 0.5, 0.8))
+# smoothed_surf.set_facecolor((0.5, 0.8, 0.2))
 
-data = np.genfromtxt("testData3.txt", delimiter=", ")
+data = np.genfromtxt("testData4.txt", delimiter=", ")
 equal = np.sum(data[:,0] == data[:,1])
 print(equal)
 

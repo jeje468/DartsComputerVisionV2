@@ -25,6 +25,8 @@ while run:
     frameA = cv.cvtColor(frameA, cv.COLOR_BGR2RGB)
     frameB = cv.cvtColor(frameB, cv.COLOR_BGR2RGB)
 
+    cv.imwrite("Images/calibrationLine.jpg", frameB)
+
     FRAME_WINDOW_A.image(frameA)
     FRAME_WINDOW_B.image(frameB)
 

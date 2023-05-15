@@ -82,10 +82,10 @@ if submitButton:
 
 if submitButton2:
 
-    f = open("testData3.txt", "a")
-    f.write(str(st.session_state["points"][0]) + ", " + actualHit1 + "\n")
-    f.write(str(st.session_state["points"][1]) + ", " + actualHit2 + "\n")
-    f.write(str(st.session_state["points"][2]) + ", " + actualHit3 + "\n")
+    f = open("testData4.txt", "a")
+    f.write(str(st.session_state["points"][0]) + ", " + actualHit1 + ", " + actualX1 + "\n")
+    f.write(str(st.session_state["points"][1]) + ", " + actualHit2 + ", " + actualX2 + "\n")
+    f.write(str(st.session_state["points"][2]) + ", " + actualHit3 + ", " + actualX3+ "\n")
     f.close()
     st.session_state["points"] = []
     st.session_state["distances"] = []
@@ -175,6 +175,7 @@ if startButton:
 if test2Submit:
     f = open("testData2.txt", "a")
     f.write(st.session_state["test2Data"][0] + ", " + actualHit + ", " + st.session_state["test2Data"][1] + ", " + actualX + ", " + st.session_state["test2Data"][2] + ", " + actualY + ", " + str(zone) + "\n")
+    #f.write(st.session_state["test2Data"][0] + ", " + actualHit + ", " + actualX + "\n")
     f.close()
 
 
